@@ -1,3 +1,12 @@
+import numpy as np
+import pandas as pd
+import glob
+import os
+import re
+from scipy.signal import savgol_filter
+from scipy.fft import fft
+
+
 def filtering(data,n_sample,poly_order):
     for i in range(data.shape[1]):
         for j in range(data.shape[2]):
@@ -29,3 +38,10 @@ def ReadingDataToStack(csv_folder):
     print(f"3D Array shape: {cropped_frames.shape}")
 
     return cropped_frames
+
+def phasegram(data):
+    for i in range(data.shape[1]):
+        for j in range(data.shape[2]):
+            data[:,i,j] = np.angle(fft(data[:,i,j]))
+    return data
+
