@@ -5,6 +5,7 @@ import os
 import re
 from scipy.signal import savgol_filter
 from scipy.fft import fft
+from sklearn.decomposition import PCA
 
 
 def filtering(data,n_sample,poly_order):
@@ -45,3 +46,12 @@ def phasegram(data):
             data[:,i,j] = np.angle(fft(data[:,i,j]))
     return data
 
+def PCT(data,principal_component_number):
+    reshaped_data=data.reshape(data.shape[0],data.shape[1]*data.shape[2])
+    reshaped_data=np.transpose(reshaped_data,(1,0))
+    pca=PCA(n_components=principal_component_number)
+    pca.fit(reshaped_data)
+    PCT_data=pca.transform(reshaped_data)
+    PCT_data=np.transpose(PCT_data,(1,0))
+    PCT_data=PCT_data.reshape(PCT_data.shape[0],data.shape[1],data.shape[2])
+    return PCT_data
