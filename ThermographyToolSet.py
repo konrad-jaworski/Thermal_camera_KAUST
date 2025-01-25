@@ -8,6 +8,7 @@ from sklearn.decomposition import PCA
 from scipy import stats
 from scipy.linalg import svd, inv, eig
 from sklearn.preprocessing import MinMaxScaler
+import pywt
 
 def filtering(data,n_sample,poly_order):
     for i in range(data.shape[1]):
@@ -143,3 +144,14 @@ def DMD(data,truncation):
     dmd_data=omega_tr.reshape(omega_tr.shape[0],data.shape[1],data.shape[2])
 
     return dmd_data
+
+def WAVELET1D(data,wavelet_name,level):
+    test_extraction=pywt.wavedec(data[:,75,75],wavelet_name,level=level)
+    wave_data=np.zeros(((test_extraction[0].shape[0],data.shape[1],data.shape[2])))
+
+    for i in range(data.shape[1]):
+        for j in range(data.shape[2]):
+            high_extraction=pywt.wavedec(data[:,i,j],wavelet_name,level=level)
+            wave_data[:,i,j]=high_extraction[0]
+
+    return wave_data
